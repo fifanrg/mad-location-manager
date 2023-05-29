@@ -387,9 +387,7 @@ public class KalmanLocationService extends Service
     @Override
     public void onCreate() {
         super.onCreate();
-        if (m_settings.provider == Settings.LocationProvider.CUSTOM && locationDataProvider != null) {
-            locationDataProvider.setLocationProvider(this);
-        }
+
         fusedLocationProvider = new FusedLocationProvider(this,this);
         gpsLocationProvider = new GPSLocationProvider(this, this, this);
         m_sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -418,6 +416,10 @@ public class KalmanLocationService extends Service
     }
 
     public void start() {
+        if (m_settings.provider == Settings.LocationProvider.CUSTOM && locationDataProvider != null) {
+            locationDataProvider.setLocationProvider(this);
+        }
+
         m_wakeLock.acquire();
         m_sensorDataQueue.clear();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

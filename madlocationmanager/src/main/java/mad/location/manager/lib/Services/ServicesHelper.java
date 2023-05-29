@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.location.Location;
 import android.os.IBinder;
 
 import java.util.ArrayList;
@@ -30,6 +31,10 @@ public class ServicesHelper {
     private List<LocationServiceStatusInterface> locationServiceStatusInterfaces = new ArrayList<>();
 
     private LocationDataProvider locationDataProvider;
+
+    void setLocationDataProvider(LocationDataProvider locationDataProvider) {
+        this.locationDataProvider = locationDataProvider;
+    }
 
     public static void addLocationServiceInterface(LocationServiceInterface locationServiceInterface) {
         if (!instance.locationServiceInterfaces.contains(locationServiceInterface)) {
@@ -75,6 +80,10 @@ public class ServicesHelper {
                     }
                 }
                 locationServiceRequests.clear();
+            }
+
+            if(locationDataProvider != null) {
+                kalmanLocationService.locationDataProvider = locationDataProvider;
             }
 
             if (locationServiceInterfaces != null && !locationServiceInterfaces.isEmpty()) {
