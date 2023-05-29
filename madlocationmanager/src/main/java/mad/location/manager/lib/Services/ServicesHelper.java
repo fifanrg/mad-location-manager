@@ -32,10 +32,10 @@ public class ServicesHelper {
 
     private LocationDataProvider locationDataProvider;
 
-    void setLocationDataProvider(LocationDataProvider locationDataProvider) {
-        this.locationDataProvider = locationDataProvider;
+    public static void setLocationDataProvider(LocationDataProvider locationDataProvider) {
+        instance.locationDataProvider = locationDataProvider;
     }
-
+    
     public static void addLocationServiceInterface(LocationServiceInterface locationServiceInterface) {
         if (!instance.locationServiceInterfaces.contains(locationServiceInterface)) {
             instance.locationServiceInterfaces.add(locationServiceInterface);
