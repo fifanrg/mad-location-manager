@@ -47,6 +47,7 @@ import mad.location.manager.lib.Loggers.GeohashRTFilter;
 import mad.location.manager.lib.locationProviders.GPSCallback;
 import mad.location.manager.lib.locationProviders.GPSLocationProvider;
 import mad.location.manager.lib.locationProviders.FusedLocationProvider;
+import mad.location.manager.lib.locationProviders.LocationDataProvider;
 import mad.location.manager.lib.locationProviders.LocationProviderCallback;
 
 public class KalmanLocationService extends Service
@@ -58,6 +59,7 @@ public class KalmanLocationService extends Service
     protected List<LocationServiceInterface> m_locationServiceInterfaces;
     protected List<LocationServiceStatusInterface> m_locationServiceStatusInterfaces;
 
+    protected LocationDataProvider locationDataProvider;
     protected Location m_lastLocation;
 
     protected ServiceStatus m_serviceStatus = ServiceStatus.SERVICE_STOPPED;
@@ -385,6 +387,9 @@ public class KalmanLocationService extends Service
     @Override
     public void onCreate() {
         super.onCreate();
+        if (m_settings.provider == Settings.LocationProvider.CUSTOM && locationDataProvider != null) {
+            locationDataProvider.setLocationProvider(this);
+        }
         fusedLocationProvider = new FusedLocationProvider(this,this);
         gpsLocationProvider = new GPSLocationProvider(this, this, this);
         m_sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -422,7 +427,14 @@ public class KalmanLocationService extends Service
             if (m_settings.provider == Settings.LocationProvider.GPS) {
                 gpsLocationProvider.startLocationUpdates(m_settings, thread);
                 m_gpsEnabled = gpsLocationProvider.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            } else {
+            }
+            else if(m_settings.provider == Settings.LocationProvider.CUSTOM) {
+                if(locationDataProvider != null) {
+                    locationDataProvider.start();
+                }
+                m_gpsEnabled = true;
+            }
+            else {
                 fusedLocationProvider.startLocationUpdates(m_settings, thread);
                 m_gpsEnabled = fusedLocationProvider.isProviderEnabled();
             }
@@ -460,7 +472,12 @@ public class KalmanLocationService extends Service
             m_serviceStatus = ServiceStatus.SERVICE_PAUSED;
             if (m_settings.provider == Settings.LocationProvider.GPS) {
                 gpsLocationProvider.stop();
-            } else {
+            } else if(m_settings.provider == Settings.LocationProvider.CUSTOM) {
+                if(locationDataProvider != null) {
+                    locationDataProvider.stop();
+                }
+            }
+            else {
                 fusedLocationProvider.stop();
             }
         }

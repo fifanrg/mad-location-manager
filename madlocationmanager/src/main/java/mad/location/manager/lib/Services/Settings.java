@@ -24,7 +24,7 @@ public class Settings {
     public double mVelFactor;
     public double mPosFactor;
     LocationProvider provider;
-    public enum LocationProvider { GPS, FUSED}
+    public enum LocationProvider { GPS, FUSED, CUSTOM}
 
 
     public Settings(double accelerationDeviation,

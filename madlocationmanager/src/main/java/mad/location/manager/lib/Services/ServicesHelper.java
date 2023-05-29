@@ -12,6 +12,7 @@ import java.util.List;
 import mad.location.manager.lib.Interfaces.LocationServiceInterface;
 import mad.location.manager.lib.Interfaces.LocationServiceStatusInterface;
 import mad.location.manager.lib.Interfaces.SimpleTempCallback;
+import mad.location.manager.lib.locationProviders.LocationDataProvider;
 
 /**
  * Created by lezh1k on 2/13/18.
@@ -27,6 +28,8 @@ public class ServicesHelper {
 
     private List<LocationServiceInterface> locationServiceInterfaces = new ArrayList<>();
     private List<LocationServiceStatusInterface> locationServiceStatusInterfaces = new ArrayList<>();
+
+    private LocationDataProvider locationDataProvider;
 
     public static void addLocationServiceInterface(LocationServiceInterface locationServiceInterface) {
         if (!instance.locationServiceInterfaces.contains(locationServiceInterface)) {
@@ -79,6 +82,10 @@ public class ServicesHelper {
             }
             if (locationServiceStatusInterfaces != null && !locationServiceStatusInterfaces.isEmpty()) {
                 kalmanLocationService.addStatusInterfaces(locationServiceStatusInterfaces);
+            }
+
+            if(locationDataProvider != null) {
+                kalmanLocationService.locationDataProvider = locationDataProvider;
             }
         }
 
