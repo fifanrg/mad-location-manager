@@ -30,12 +30,6 @@ public class ServicesHelper {
     private List<LocationServiceInterface> locationServiceInterfaces = new ArrayList<>();
     private List<LocationServiceStatusInterface> locationServiceStatusInterfaces = new ArrayList<>();
 
-    private LocationDataProvider locationDataProvider;
-
-    public static void setLocationDataProvider(LocationDataProvider locationDataProvider) {
-        instance.locationDataProvider = locationDataProvider;
-    }
-    
     public static void addLocationServiceInterface(LocationServiceInterface locationServiceInterface) {
         if (!instance.locationServiceInterfaces.contains(locationServiceInterface)) {
             instance.locationServiceInterfaces.add(locationServiceInterface);
@@ -82,22 +76,14 @@ public class ServicesHelper {
                 locationServiceRequests.clear();
             }
 
-            if(locationDataProvider != null) {
-                kalmanLocationService.locationDataProvider = locationDataProvider;
-            }
-
             if (locationServiceInterfaces != null && !locationServiceInterfaces.isEmpty()) {
                 kalmanLocationService.addInterfaces(locationServiceInterfaces);
             }
             if (locationServiceStatusInterfaces != null && !locationServiceStatusInterfaces.isEmpty()) {
                 kalmanLocationService.addStatusInterfaces(locationServiceStatusInterfaces);
             }
-
-            if(locationDataProvider != null) {
-                kalmanLocationService.locationDataProvider = locationDataProvider;
-            }
         }
-
+        
         @Override
         public void onServiceDisconnected(ComponentName className) {
             connectingLocationService = false;

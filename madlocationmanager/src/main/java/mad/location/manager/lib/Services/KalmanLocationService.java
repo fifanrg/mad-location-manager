@@ -63,7 +63,9 @@ public class KalmanLocationService extends Service
     protected Location m_lastLocation;
 
     protected ServiceStatus m_serviceStatus = ServiceStatus.SERVICE_STOPPED;
-
+    public void setLocationDataProvider(LocationDataProvider locationProvider) {
+        locationDataProvider = locationProvider;
+    }
     @Override
     public void locationAvailabilityChanged(boolean isLocationAvailable) {
         m_gpsEnabled = isLocationAvailable;
